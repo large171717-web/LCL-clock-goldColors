@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LCL 31st Birthday - Luxury Edition</title>
+    <title>LCL 31st Birthday - Gold & Charcoal Edition</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         body {
@@ -14,17 +14,17 @@
             min-height: 100vh;
             margin: 0;
             overflow: hidden;
-            transition: background-color 2s ease;
         }
 
         .clock-container {
             position: relative;
-            /* 手機版滿版，電腦版放大至 900px */
-            width: 100vw;
-            max-width: 900px; 
+            /* 保持大尺寸置中 */
+            width: 95vw;
+            max-width: 850px; 
             aspect-ratio: 2482 / 3508;
-            filter: drop-shadow(0 20px 60px rgba(0,0,0,0.6));
-            z-index: 5;
+            filter: drop-shadow(0 30px 60px rgba(0,0,0,0.7));
+            /* 確保手錶在紙屑上方，不被遮擋 */
+            z-index: 10; 
         }
 
         .layer {
@@ -45,39 +45,43 @@
             object-fit: contain;
         }
 
-        /* 金屬質感標題 */
+        /* 移至下方的金色質感標題 */
         #birthday-banner {
             position: fixed;
-            top: 8%;
+            bottom: 6%; /* 移到畫面下方 */
             text-align: center;
             opacity: 0;
             transition: all 1.5s ease;
-            z-index: 10;
+            z-index: 15;
+            width: 100%;
         }
 
         #birthday-banner.show {
             opacity: 1;
-            transform: scale(1.1);
+            transform: translateY(-10px);
         }
 
-        .bday-text {
+        .bday-text, .bday-sub {
             font-family: 'Georgia', serif;
-            font-size: 2.8rem;
             font-weight: bold;
             font-style: italic;
-            /* 金色漸層文字 */
+            /* 金屬漸層效果 */
             background: linear-gradient(to bottom, #cfaf6c 0%, #ffecb3 25%, #d1a95a 50%, #f7e0a3 75%, #b38728 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.8));
             margin: 0;
         }
 
+        .bday-text {
+            font-size: 2.2rem;
+        }
+
         .bday-sub {
-            color: #8a8a8a;
-            letter-spacing: 2px;
-            font-size: 1rem;
-            margin-top: 10px;
+            font-size: 1.2rem;
+            margin-top: 5px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
         }
 
         #hour { z-index: 2; }
@@ -89,7 +93,7 @@
 
     <div id="birthday-banner">
         <h1 class="bday-text">Happy 31st Birthday, LCL!</h1>
-        <div class="bday-sub">BORN FEB. 5, 1995</div>
+        <p class="bday-sub">Born Feb. 5, 1995</p>
     </div>
 
     <div class="clock-container">
@@ -117,7 +121,7 @@
             document.getElementById('minute').style.transform = `rotate(${mDeg}deg)`;
             document.getElementById('hour').style.transform = `rotate(${hDeg}deg)`;
 
-            // 生日自動檢查 (今日 2 月 5 日)
+            // 生日自動檢查
             if (now.getMonth() === 1 && now.getDate() === 5) {
                 if (!confettiTriggered) {
                     startCelebration();
@@ -129,24 +133,31 @@
         function startCelebration() {
             document.getElementById('birthday-banner').classList.add('show');
             
-            // 金色紙屑特效
-            const end = Date.now() + (6 * 1000);
+            // 設定延續 20 秒
+            const end = Date.now() + (20 * 1000);
             const goldColors = ['#D4AF37', '#FFD700', '#B8860B', '#F7E7CE', '#996515'];
 
             (function frame() {
+                // 降低 particleCount 並調整 gravity 讓速度變慢
                 confetti({
-                    particleCount: 2,
+                    particleCount: 1, 
                     angle: 60,
                     spread: 55,
-                    origin: { x: 0, y: 0.6 },
-                    colors: goldColors
+                    origin: { x: 0, y: 0.8 },
+                    colors: goldColors,
+                    gravity: 0.6, // 預設為 1，調低會讓紙屑落得更慢
+                    ticks: 300,   // 增加紙屑存在時間
+                    zIndex: 1     // 關鍵：將紙屑層級設低，確保在手錶後方
                 });
                 confetti({
-                    particleCount: 2,
+                    particleCount: 1,
                     angle: 120,
                     spread: 55,
-                    origin: { x: 1, y: 0.6 },
-                    colors: goldColors
+                    origin: { x: 1, y: 0.8 },
+                    colors: goldColors,
+                    gravity: 0.6,
+                    ticks: 300,
+                    zIndex: 1
                 });
 
                 if (Date.now() < end) {
