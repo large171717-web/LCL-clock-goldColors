@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LCL 31st Birthday - Luxury Edition</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            background-color: #1a1a1a; /* 深灰色背景 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            transition: background-color 2s ease;
+        }
+
+        .clock-container {
+            position: relative;
+            /* 手機版滿版，電腦版放大至 900px */
+            width: 100vw;
+            max-width: 900px; 
+            aspect-ratio: 2482 / 3508;
+            filter: drop-shadow(0 20px 60px rgba(0,0,0,0.6));
+            z-index: 5;
+        }
+
+        .layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            pointer-events: none;
+            transform-origin: center center; 
+        }
+
+        .base-face {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* 金屬質感標題 */
+        #birthday-banner {
+            position: fixed;
+            top: 8%;
+            text-align: center;
+            opacity: 0;
+            transition: all 1.5s ease;
+            z-index: 10;
+        }
+
+        #birthday-banner.show {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .bday-text {
+            font-family: 'Georgia', serif;
+            font-size: 2.8rem;
+            font-weight: bold;
+            font-style: italic;
+            /* 金色漸層文字 */
+            background: linear-gradient(to bottom, #cfaf6c 0%, #ffecb3 25%, #d1a95a 50%, #f7e0a3 75%, #b38728 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
+            margin: 0;
+        }
+
+        .bday-sub {
+            color: #8a8a8a;
+            letter-spacing: 2px;
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+
+        #hour { z-index: 2; }
+        #minute { z-index: 3; }
+        #second { z-index: 4; }
+    </style>
+</head>
+<body>
+
+    <div id="birthday-banner">
+        <h1 class="bday-text">Happy 31st Birthday, LCL!</h1>
+        <div class="bday-sub">BORN FEB. 5, 1995</div>
+    </div>
+
+    <div class="clock-container">
+        <img src="face-01.png" class="base-face">
+        <img src="hour-01.png" id="hour" class="layer">
+        <img src="minute-01.png" id="minute" class="layer">
+        <img src="second-01.png" id="second" class="layer">
+    </div>
+
+    <script>
+        let confettiTriggered = false;
+
+        function updateClock() {
+            const now = new Date();
+            const ms = now.getMilliseconds();
+            const s = now.getSeconds();
+            const m = now.getMinutes();
+            const h = now.getHours();
+
+            const sDeg = (s * 6) + (ms * 0.006);
+            const mDeg = (m * 6) + (s * 0.1);
+            const hDeg = (h % 12 * 30) + (m * 0.5);
+
+            document.getElementById('second').style.transform = `rotate(${sDeg}deg)`;
+            document.getElementById('minute').style.transform = `rotate(${mDeg}deg)`;
+            document.getElementById('hour').style.transform = `rotate(${hDeg}deg)`;
+
+            // 生日自動檢查 (今日 2 月 5 日)
+            if (now.getMonth() === 1 && now.getDate() === 5) {
+                if (!confettiTriggered) {
+                    startCelebration();
+                    confettiTriggered = true;
+                }
+            }
+        }
+
+        function startCelebration() {
+            document.getElementById('birthday-banner').classList.add('show');
+            
+            // 金色紙屑特效
+            const end = Date.now() + (6 * 1000);
+            const goldColors = ['#D4AF37', '#FFD700', '#B8860B', '#F7E7CE', '#996515'];
+
+            (function frame() {
+                confetti({
+                    particleCount: 2,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0, y: 0.6 },
+                    colors: goldColors
+                });
+                confetti({
+                    particleCount: 2,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1, y: 0.6 },
+                    colors: goldColors
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+
+        setInterval(updateClock, 50);
+        updateClock();
+    </script>
+</body>
+</html>
