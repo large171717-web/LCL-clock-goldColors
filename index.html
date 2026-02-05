@@ -19,8 +19,8 @@
         .clock-container {
             position: relative;
             /* --- 調整大小請改這裡 --- */
-            width: 98vw; 
-            max-width: 1000px; /* 從 850px 放大到 1000px */
+            width: 102vw; 
+            /* 從 850px 放大到 1000px */
             /* ----------------------- */
             aspect-ratio: 2482 / 3508;
             filter: drop-shadow(0 40px 80px rgba(0,0,0,0.8));
@@ -134,7 +134,7 @@
                     spread: 45,
                     origin: { x: 0, y: 0.85 },
                     colors: goldColors,
-                    gravity: 0.45, // 極慢速落下
+                    gravity: 0.35, // 極慢速落下
                     ticks: 500,
                     zIndex: 1 // 在手錶後方
                 });
@@ -144,7 +144,7 @@
                     spread: 45,
                     origin: { x: 1, y: 0.85 },
                     colors: goldColors,
-                    gravity: 0.45,
+                    gravity: 0.35,
                     ticks: 500,
                     zIndex: 1
                 });
@@ -160,3 +160,4 @@
     </script>
 </body>
 </html>
+
